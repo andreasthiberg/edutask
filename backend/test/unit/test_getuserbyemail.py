@@ -9,6 +9,7 @@ def dao_mock():
     yield dao_mock
 
 
+
 # Check results when a a matching user is not found in the system.
 @pytest.mark.unit
 def test_getUserByEmail_userNotFound(dao_mock):
@@ -22,7 +23,6 @@ def test_getUserByEmail_userNotFound(dao_mock):
 
 # Test handling of database exception when retrieving user info
 @pytest.mark.unit
-@mock.patch('src.controllers.usercontroller.DAO')
 def test_get_user_by_email_exception(dao_mock):
     # Mock DAO's find method to raise an exception
     dao_mock.find = mock.MagicMock(side_effect=Exception('Database error'))
