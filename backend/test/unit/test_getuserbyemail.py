@@ -29,5 +29,9 @@ def test_get_user_by_email_exception(dao_mock):
 
     sut = UserController(dao=dao_mock)
 
-    with pytest.raises(Exception):
+    with pytest.raises(Exception) as exec:
         sut.get_user_by_email(email='testname@email.com')
+    
+    assert str(exec.value) == "Database error"
+
+
