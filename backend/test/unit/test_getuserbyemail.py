@@ -9,7 +9,6 @@ def dao_mock():
     yield dao_mock
 
 
-
 # Check results when a a matching user is not found in the system.
 @pytest.mark.unit
 def test_getUserByEmail_userNotFound(dao_mock):
