@@ -16,7 +16,7 @@ def mongo_test_collection():
     test_db.drop_collection('test_collection')
     client.close()
 
-# Validator fixture
+# Sut fixture with mocked validator
 @pytest.fixture
 @patch('src.util.dao.getValidator', autospec=True)
 def sut(mocked_get_validator):
@@ -44,6 +44,7 @@ def sut(mocked_get_validator):
     sut = dao
     return sut
 
+# Test adding correctly formated user to DB
 @pytest.mark.integration
 def test_create(sut):
 
