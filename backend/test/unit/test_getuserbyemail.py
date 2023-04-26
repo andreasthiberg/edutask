@@ -33,4 +33,30 @@ def test_get_user_by_email_exception(dao_mock):
     
     assert str(exec.value) == "Database error"
 
+# Check a registered and valid email
+@pytest.mark.unit
+def test_getUserByEmail_userFound(dao_mock): 
+    dao_mock.find.return_value = [{'id': 1, 'name': 'Jane Doe', 'email' : 'test@test.test'}]
 
+    sut = UserController(dao=dao_mock)
+
+    res = sut.get_user_by_email(email='test@test.test')
+
+    assert res['email'] == 'test@test.test'
+    assert res['name'] == 'Jane Doe'
+    assert res['id'] == 1
+
+# Check multiple users with the same email
+@pytest.mark.unit
+def test_getUserByEmail_multipleUsersFound(dao_mock):
+    dao_mock.find.return_value = [{'id': 1, 'name': 'Jane Doe', 'email' : 'test@test.test'}, {'id': 2, 'name': 'John Doe', 'email': 'test@test.test'}]
+
+    sut = UserController(dao=dao_mock)
+
+    res = sut.get_user_by_email(email='test@test.test')
+
+    assert res['email'] == 'test@test.test'
+    assert res['name'] == 'Jane Doe'
+    assert res['id'] == 1
+
+     
