@@ -2,6 +2,7 @@ import pytest
 import unittest.mock as mock
 from unittest.mock import patch
 from pymongo import MongoClient
+import pymongo.errors as pymongo_errors
 from src.util.dao import DAO
 
 # Test MongoDB fixture
@@ -44,9 +45,9 @@ def sut(mocked_get_validator):
     sut = dao
     return sut
 
-# Test adding correctly formated user to DB
+# Test adding correctly formated user to DB, expect success
 @pytest.mark.integration
-def test_create(sut):
+def test_create_correct_format(sut):
 
     # Add new user entry to database
     user_data = {"name": "Adam", "email": "adam@email.com"}
@@ -57,3 +58,13 @@ def test_create(sut):
     assert result["name"] == "Adam"
     assert result["_id"]
     
+# Test adding incorrectly formated user to DB, expect WriteError
+@pytest.mark.integration
+def test_create_incorrect_format(sut):
+
+    # Attempt adding incorrectly formmated user data to database
+    user_data = {"firstname": "Adam", "email": "adam@email.com"}
+    with pytest.raises(pymongo_errors.WriteError) as exec:
+      result = sut.create(user_data)
+    
+
