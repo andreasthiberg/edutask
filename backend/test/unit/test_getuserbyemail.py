@@ -20,19 +20,6 @@ def test_getUserByEmail_userNotFound(dao_mock):
 
     assert userResult == None
 
-# Test handling of database exception when retrieving user info
-@pytest.mark.unit
-def test_get_user_by_email_exception(dao_mock):
-    # Mock DAO's find method to raise an exception
-    dao_mock.find = mock.MagicMock(side_effect=Exception('Database error'))
-
-    sut = UserController(dao=dao_mock)
-
-    with pytest.raises(Exception) as exec:
-        sut.get_user_by_email(email='testname@email.com')
-    
-    assert str(exec.value) == "Database error"
-
 # Check a registered and valid email
 @pytest.mark.unit
 def test_getUserByEmail_userFound(dao_mock): 
@@ -58,5 +45,30 @@ def test_getUserByEmail_multipleUsersFound(dao_mock):
     assert res['email'] == 'test@test.test'
     assert res['name'] == 'Jane Doe'
     assert res['id'] == 1
+
+# Test handling of database exception when retrieving user info
+@pytest.mark.unit
+def test_get_user_by_email_exception(dao_mock):
+    # Mock DAO's find method to raise an exception
+    dao_mock.find = mock.MagicMock(side_effect=Exception('Database error'))
+
+    sut = UserController(dao=dao_mock)
+
+    with pytest.raises(Exception) as exec:
+        sut.get_user_by_email(email='testname@email.com')
+    
+    assert str(exec.value) == "Database error"
+
+# Test handling of invalid email
+@pytest.mark.unit
+def test_getUserByEmail_invalidEmail(dao_mock):
+    sut = UserController(dao=dao_mock)
+
+    with pytest.raises(ValueError) as exec:
+        sut.get_user_by_email(email='test_invalid_email')
+
+    assert str(exec.value) == 'Error: invalid email address'
+
+
 
      
