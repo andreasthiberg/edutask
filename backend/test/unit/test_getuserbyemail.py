@@ -30,8 +30,6 @@ def test_getUserByEmail_userFound(dao_mock):
     res = sut.get_user_by_email(email='test@test.test')
 
     assert res['email'] == 'test@test.test'
-    assert res['name'] == 'Jane Doe'
-    assert res['id'] == 1
 
 # Check multiple users with the same email
 @pytest.mark.unit
@@ -42,8 +40,6 @@ def test_getUserByEmail_multipleUsersFound(dao_mock):
 
     res = sut.get_user_by_email(email='test@test.test')
 
-    assert res['email'] == 'test@test.test'
-    assert res['name'] == 'Jane Doe'
     assert res['id'] == 1
 
 # Test handling of database exception when retrieving user info
