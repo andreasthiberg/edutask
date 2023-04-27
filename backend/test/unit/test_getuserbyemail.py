@@ -34,13 +34,13 @@ def test_getUserByEmail_userFound(dao_mock):
 # Check multiple users with the same email
 @pytest.mark.unit
 def test_getUserByEmail_multipleUsersFound(dao_mock):
-    dao_mock.find.return_value = [{'id': 1, 'name': 'Jane Doe', 'email' : 'test@test.test'}, {'id': 2, 'name': 'John Doe', 'email': 'test@test.test'}]
+    dao_mock.find.return_value = [{'id': 2, 'name': 'Jane Doe', 'email' : 'test@test.test'}, {'id': 1, 'name': 'John Doe', 'email': 'test@test.test'}]
 
     sut = UserController(dao=dao_mock)
 
     res = sut.get_user_by_email(email='test@test.test')
 
-    assert res['id'] == 1
+    assert res['id'] == 2
 
 # Test handling of database exception when retrieving user info
 @pytest.mark.unit
