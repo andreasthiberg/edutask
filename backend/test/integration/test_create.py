@@ -64,7 +64,7 @@ def test_create_incorrect_format(sut):
 
     # Attempt adding incorrectly formmated user data to database
     user_data = {"firstname": "Adam", "email": "adam@email.com"}
-    with pytest.raises(pymongo_errors.WriteError) as exec:
-      result = sut.create(user_data)
+    with pytest.raises(pymongo_errors.WriteError):
+      sut.create(user_data)
     
 
