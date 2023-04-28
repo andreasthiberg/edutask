@@ -34,7 +34,7 @@ def sut(mocked_get_validator):
          },
          "email": {
             "bsonType": "string",
-            "pattern": "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$",
+            "pattern": r"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$",
             "description": "must be a valid email address"
          }
        }
@@ -73,7 +73,7 @@ def test_create_missing_field(sut):
     # Add new user with missing data to the database
     user_data = {'name': 'Ada Lovelace', 'age': '36'}
 
-    with pytest.raises(Exeption) as exc:
+    with pytest.raises(Exception) as exc:
         sut.create(user_data)
     
     assert 'email' in str(exc.value)
