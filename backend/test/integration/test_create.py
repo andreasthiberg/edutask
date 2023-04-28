@@ -68,3 +68,13 @@ def test_create_incorrect_format(sut):
       sut.create(user_data)
     
 
+@pytest.mark.integration
+def test_create_missing_field(sut):
+    # Add new user with missing data to the database
+    user_data = {'name': 'Ada Lovelace', 'age': '36'}
+
+    with pytest.raises(Exeption) as exc:
+        sut.create(user_data)
+    
+    assert 'email' in str(exc.value)
+
