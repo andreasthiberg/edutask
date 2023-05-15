@@ -9,22 +9,9 @@ from bson.objectid import ObjectId
 # Test MongoDB fixture
 @pytest.fixture
 def mongo_test_collection():
-    # Temporary mongo db for integration testing
-    client = MongoClient('mongodb://localhost:27017/')
-    test_db = client['test_db']
-    yield test_db['test_collection']
-
-    # Clean up
-    test_db.drop_collection('test_collection')
-    client.close()
-
-# Sut fixture with mocked validator
-@pytest.fixture
-@patch('src.util.dao.getValidator', autospec=True)
-def sut(mocked_get_validator):
 
     # Mocked example validator for use data
-    mocked_get_validator.return_value = {
+    validator = { 
     '$jsonSchema': {
       "bsonType": "object",
       "required": ["name", "email"],
@@ -42,8 +29,26 @@ def sut(mocked_get_validator):
     }
     }
 
-    dao = DAO("test_collection")
-    sut = dao
+    # Temporary mongo db for integration testing
+    client = MongoClient('mongodb://localhost:27017/')
+    test_db = client['edutask']
+    test_db.create_collection("test_collection", validator=validator)
+    test_collection = test_db['test_collection']
+    yield test_collection
+
+    # Clean up
+    test_collection.drop()
+    client.close()
+
+# Sut fixture with mocked MongoDB collection
+@pytest.fixture
+def sut(mongo_test_collection):
+
+    class MockedDAO(DAO):
+        def __init__(self, collection):
+            self.collection = collection
+
+    sut = MockedDAO(mongo_test_collection)
     return sut
 
 # Test adding correctly formated user to DB, expect success
